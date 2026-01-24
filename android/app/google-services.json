@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "586080968901",
+    "project_id": "gayathri-varthalu",
+    "storage_bucket": "gayathri-varthalu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586080968901:android:2b79cf1f487e4b8f0e90ac",
+        "android_client_info": {
+          "package_name": "com.egayathrivarthalu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmHhW9rMhdt5zLJ6oKY7kSskeXBZMuAbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

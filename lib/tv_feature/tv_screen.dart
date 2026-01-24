@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:provider/provider.dart';
+
+import 'package:gayathri_varthalu/bottom_nav_bloc.dart';
+
+class TVScreen extends StatefulWidget {
+  final String liveUrl;
+  final bool visible;
+
+  const TVScreen({
+    super.key,
+    required this.liveUrl,
+    this.visible = false,
+  });
+
+  @override
+  State<TVScreen> createState() => _TVScreenState();
+}
+
+class _TVScreenState extends State<TVScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _handleOrientation();
+  }
+
+  @override
+  void didUpdateWidget(covariant TVScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _handleOrientation();
+  }
+
+  void _handleOrientation() {
+    if (widget.visible) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+      // Hide system UI and make it black
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+      );
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Restore portrait orientation and system UI when leaving TVScreen
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        // Always navigate to ShortNewsScreen on back press
+        context.read<BottomNavBloc>().add(const TabChanged(0));
+      },
+      child: Container(
+        color: Colors.black,
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: widget.liveUrl.isEmpty
+              ? const Center(child: SizedBox.shrink())
+              : InAppWebView(
+                  initialSettings: InAppWebViewSettings(
+                    transparentBackground: false,
+                    supportZoom: false,
+                    disableHorizontalScroll: true,
+                    disableVerticalScroll: true,
+                  ),
+                  initialUrlRequest: URLRequest(url: WebUri(widget.liveUrl)),
+                  onLoadStart: (controller, url) async {
+                    await controller.evaluateJavascript(
+                      source:
+                          "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
+                    );
+                  },
+                  onLoadStop: (controller, url) async {
+                    await controller.evaluateJavascript(
+                      source:
+                          "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
+                    );
+                  },
+                ),
+        ),
+      ),
+    );
+  }
+}
