@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -83,26 +84,58 @@ class _TVScreenState extends State<TVScreen> {
           backgroundColor: Colors.black,
           body: widget.liveUrl.isEmpty
               ? const Center(child: SizedBox.shrink())
-              : InAppWebView(
-                  initialSettings: InAppWebViewSettings(
-                    transparentBackground: false,
-                    supportZoom: false,
-                    disableHorizontalScroll: true,
-                    disableVerticalScroll: true,
-                  ),
-                  initialUrlRequest: URLRequest(url: WebUri(widget.liveUrl)),
-                  onLoadStart: (controller, url) async {
-                    await controller.evaluateJavascript(
-                      source:
-                          "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
-                    );
-                  },
-                  onLoadStop: (controller, url) async {
-                    await controller.evaluateJavascript(
-                      source:
-                          "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
-                    );
-                  },
+              : Stack(
+                  children: [
+                    InAppWebView(
+                      initialSettings: InAppWebViewSettings(
+                        transparentBackground: false,
+                        supportZoom: false,
+                        disableHorizontalScroll: true,
+                        disableVerticalScroll: true,
+                      ),
+                      initialUrlRequest:
+                          URLRequest(url: WebUri(widget.liveUrl)),
+                      onLoadStart: (controller, url) async {
+                        await controller.evaluateJavascript(
+                          source:
+                              "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
+                        );
+                      },
+                      onLoadStop: (controller, url) async {
+                        await controller.evaluateJavascript(
+                          source:
+                              "document.body.style.backgroundColor = 'black'; document.documentElement.style.backgroundColor = 'black'; document.body.style.margin = '0'; document.body.style.padding = '0';",
+                        );
+                      },
+                    ),
+                    if (Platform.isIOS)
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 10,
+                        left: 10,
+                        child: SafeArea(
+                          child: Material(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(20),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                context
+                                    .read<BottomNavBloc>()
+                                    .add(const TabChanged(0));
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
         ),
       ),

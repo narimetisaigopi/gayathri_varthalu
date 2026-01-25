@@ -12,11 +12,26 @@ class AdService {
   static const int maxFailedLoadAttempts = 3;
 
   // Interstitial Ad Unit ID
-  static const String interstitialAdUnitId =
-      'ca-app-pub-2214578587937661/7634623335';
+  static String get interstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2214578587937661/7634623335';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-2214578587937661/2255455525';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
 
-  // Banner Ad Unit ID (existing)
-  static const String bannerAdUnitId = 'ca-app-pub-2214578587937661/7583308365';
+  // Banner Ad Unit ID
+  static String get bannerAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2214578587937661/7583308365';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-2214578587937661/2255455525';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
 
   /// Initialize the AdService
   void initialize() {
