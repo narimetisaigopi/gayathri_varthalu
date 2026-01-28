@@ -73,10 +73,16 @@ class _TVScreenState extends State<TVScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        // Always navigate to ShortNewsScreen on back press
-        context.read<BottomNavBloc>().add(const TabChanged(0));
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          // Navigate to ShortNewsScreen after successful pop
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              context.read<BottomNavBloc>().add(const TabChanged(0));
+            }
+          });
+        }
       },
       child: Container(
         color: Colors.black,
@@ -108,33 +114,33 @@ class _TVScreenState extends State<TVScreen> {
                         );
                       },
                     ),
-                    if (Platform.isIOS)
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 10,
-                        left: 10,
-                        child: SafeArea(
-                          child: Material(
-                            color: Colors.black54,
+                    // Back button for both iOS and Android
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top + 10,
+                      left: 10,
+                      child: SafeArea(
+                        child: Material(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
                             borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                context
-                                    .read<BottomNavBloc>()
-                                    .add(const TabChanged(0));
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                child: const Icon(
-                                  Icons.arrow_back_ios_new,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                            onTap: () {
+                              context
+                                  .read<BottomNavBloc>()
+                                  .add(const TabChanged(0));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
                           ),
                         ),
                       ),
+                    ),
                   ],
                 ),
         ),

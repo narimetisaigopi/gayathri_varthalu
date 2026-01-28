@@ -210,7 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 epaperUrl != null &&
                 epaperUrl.isNotEmpty &&
                 popImage != null &&
-                popImage.isNotEmpty) {
+                popImage.isNotEmpty &&
+                popImage != "0") {
               _showPopupImage(context, popImage);
             }
 
