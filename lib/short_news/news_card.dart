@@ -355,8 +355,7 @@ class _NewsCardState extends State<NewsCard> {
   void _handleShare() async {
     final shareText = '${widget.title}\n '
         'Read more at: ${widget.shareUrl}\n'
-        'Download App: ${StringConstants.playstoreAppLink}';
-    ;
+        '${StringConstants.appWebsiteLink}';
     final FlutterSocialShare flutterShareMe = FlutterSocialShare();
     // Open plugin's bottom sheet for all options
     await flutterShareMe.shareToSystem(msg: shareText);
