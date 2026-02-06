@@ -10,7 +10,6 @@ import 'package:gayathri_varthalu/services/token_service.dart';
 import 'package:gayathri_varthalu/services/url_bloc.dart';
 import 'package:gayathri_varthalu/short_news/short_news_screen.dart';
 import 'package:gayathri_varthalu/tv_feature/tv_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,20 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const List<_SocialApp> _apps = [
-    _SocialApp('Snapchat', Icons.snapchat,
-        'https://www.snapchat.com/add/yourusername'),
-    _SocialApp('Instagram', Icons.camera_alt_outlined,
-        'https://instagram.com/yourusername'),
-    _SocialApp('Facebook', Icons.facebook_outlined,
-        'https://facebook.com/yourusername'),
-    _SocialApp('YouTube', Icons.ondemand_video,
-        'https://www.youtube.com/@gayathrivarthalu'),
-    _SocialApp(
-        'Contact Us', Icons.contact_mail, 'mailto:contact@yourdomain.com'),
-    _SocialApp('Message', Icons.message, ''),
-  ];
-
   bool _isRequestingPermission = false;
   bool _hasShownPopup = false;
 
@@ -43,13 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _requestNotificationPermission();
     _fetchAndLogFcmToken();
     _setupForegroundMessageListener();
-  }
-
-  Future<void> _openUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -376,12 +354,4 @@ class _NavBarItem extends StatelessWidget {
       ),
     );
   }
-}
-
-class _SocialApp {
-  final String name;
-  final IconData icon;
-  final String url;
-
-  const _SocialApp(this.name, this.icon, this.url);
 }

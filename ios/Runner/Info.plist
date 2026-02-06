@@ -248,15 +248,6 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-    		<key>NSAllowsArbitraryLoads</key>
-    		<true/>
-	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to photo library to share images</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to camera to capture images</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This app uses data for delivering personalized ads</string>
 		<key>UIBackgroundModes</key>

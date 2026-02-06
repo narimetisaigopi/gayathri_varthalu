@@ -25,25 +25,6 @@ void main() async {
     print('❌ Firebase initialization failed: $e\n');
   }
 
-  // Request App Tracking Transparency permission (iOS only)
-  print('🔐 Checking App Tracking Transparency...');
-  try {
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-    print('📊 Current ATT Status: $status');
-
-    if (status == TrackingStatus.notDetermined) {
-      print('⏳ Requesting App Tracking Transparency permission...');
-      final newStatus =
-          await AppTrackingTransparency.requestTrackingAuthorization();
-      print('✅ ATT Permission requested. New status: $newStatus');
-    } else {
-      print('✅ ATT Status already determined: $status');
-    }
-  } catch (e) {
-    print('⚠️  ATT check failed (likely Android or error): $e');
-  }
-  print('========================================\n');
-
   print('🎯 Initializing Google Mobile Ads...');
   try {
     final initializationStatus = await MobileAds.instance.initialize();
@@ -92,8 +73,50 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Request ATT permission after the first frame is rendered
+    // This ensures the app UI is visible when the dialog appears
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestAppTrackingTransparency();
+    });
+  }
+
+  Future<void> _requestAppTrackingTransparency() async {
+    print('\n========================================');
+    print('🔐 Requesting App Tracking Transparency...');
+    print('========================================\n');
+
+    try {
+      final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+      print('📊 Current ATT Status: $status');
+
+      if (status == TrackingStatus.notDetermined) {
+        print('⏳ Showing ATT permission dialog...');
+        // Small delay to ensure UI is fully rendered
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        final newStatus =
+            await AppTrackingTransparency.requestTrackingAuthorization();
+        print('✅ ATT Permission requested. New status: $newStatus');
+      } else {
+        print('✅ ATT Status already determined: $status');
+      }
+    } catch (e) {
+      print('⚠️  ATT request failed (likely Android or error): $e');
+    }
+    print('========================================\n');
+  }
 
   @override
   Widget build(BuildContext context) {
