@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:gayathri_varthalu/app_router.dart';
 import 'package:gayathri_varthalu/theme.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gayathri_varthalu/bottom_nav_bloc.dart';
 import 'package:gayathri_varthalu/services/url_bloc.dart';
@@ -38,14 +37,16 @@ void main() async {
     print(
         '📦 Mobile Ads SDK Version: ${await MobileAds.instance.getVersionString()}');
 
-    // Optional: Set request configuration for testing
+    // Configure for non-personalized ads only (ATT tracking disabled)
     final configuration = RequestConfiguration(
       testDeviceIds: [], // Add your test device IDs here if testing
       maxAdContentRating: MaxAdContentRating.g,
+      // Note: Without ATT permission, AdMob automatically serves non-personalized ads
     );
     MobileAds.instance.updateRequestConfiguration(configuration);
     print('✅ Ad Request Configuration updated');
     print('   Max Ad Content Rating: G');
+    print('   ℹ️  Non-personalized ads only (no tracking)');
 
     // Initialize Ad Service for interstitial ads
     AdService().initialize();
@@ -81,42 +82,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Request ATT permission after the first frame is rendered
-    // This ensures the app UI is visible when the dialog appears
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _requestAppTrackingTransparency();
-    });
-  }
-
-  Future<void> _requestAppTrackingTransparency() async {
-    print('\n========================================');
-    print('🔐 Requesting App Tracking Transparency...');
-    print('========================================\n');
-
-    try {
-      final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-      print('📊 Current ATT Status: $status');
-
-      if (status == TrackingStatus.notDetermined) {
-        print('⏳ Showing ATT permission dialog...');
-        // Small delay to ensure UI is fully rendered
-        await Future.delayed(const Duration(milliseconds: 500));
-
-        final newStatus =
-            await AppTrackingTransparency.requestTrackingAuthorization();
-        print('✅ ATT Permission requested. New status: $newStatus');
-      } else {
-        print('✅ ATT Status already determined: $status');
-      }
-    } catch (e) {
-      print('⚠️  ATT request failed (likely Android or error): $e');
-    }
-    print('========================================\n');
-  }
+  // ATT permission removed - app will show non-personalized ads only
 
   @override
   Widget build(BuildContext context) {

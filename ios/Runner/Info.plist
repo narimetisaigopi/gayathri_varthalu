@@ -248,11 +248,9 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This app uses data for delivering personalized ads</string>
-		<key>UIBackgroundModes</key>
-		<array>
-    		<string>remote-notification</string>
-		</array>	
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>	
 	</dict>
 </plist>
